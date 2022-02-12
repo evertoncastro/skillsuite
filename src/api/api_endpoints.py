@@ -34,10 +34,10 @@ update_user_request = namespace.model('Update user request', {
 headers = namespace.parser()
 
 
-@namespace.route('/<int:id>', doc={"description": 'Get user'})
+@namespace.route('/<int:id>', doc={"description": 'Settings'})
 @namespace.param('id', 'user identifier')
 @namespace.expect(headers)
-class GetUser(Resource):
+class UserSettings(Resource):
     @namespace.response(200, 'Success')
     @namespace.response(404, 'Not Found user')
     @namespace.marshal_with(user_response)
@@ -52,11 +52,6 @@ class GetUser(Resource):
         finally:
             session.close()
 
-
-@namespace.route('/<int:id>', doc={"description": 'Update user'})
-@namespace.param('id', 'user identifier')
-@namespace.expect(headers)
-class UpdateUser(Resource):
     @namespace.response(200, 'Success')
     @namespace.response(404, 'Not Found user')
     @namespace.expect(update_user_request, validate=True)
