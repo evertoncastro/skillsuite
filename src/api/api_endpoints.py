@@ -1,12 +1,16 @@
 from app import db
+from models import User
+from util import is_valid_email
 from flask_restplus import Api
 from flask_restplus import Namespace, Resource, fields, abort
 from werkzeug.exceptions import HTTPException
 from werkzeug.exceptions import BadRequest
 from werkzeug.exceptions import NotFound
 from werkzeug.exceptions import InternalServerError
-from models import User
-from util import is_valid_email
+from services.external_system import (
+    call_external_system,
+    ExternalSystemException
+)
 
 
 namespace = Namespace('settings', description='Settings')
@@ -68,8 +72,12 @@ class UpdateUser(Resource):
             user = User().update(session, id, **data)
             if not user:
                 raise NotFound('Not found user')
+            call_external_system(user)
             # session.commit()
             return user
+        except ExternalSystemException as e:
+            session.rollback()
+            raise InternalServerError(e.args[0])
         finally:
             session.close()
 

@@ -12,6 +12,9 @@ meta = MetaData()
 os.environ["ENV"] = "testing"
 os.environ["SQLALCHEMY_DATABASE_URI"] = "sqlite:///test.db"
 
+if os.path.exists("src/test.db"):
+    os.remove("src/test.db")
+
 
 @pytest.fixture(scope="session")
 def app():

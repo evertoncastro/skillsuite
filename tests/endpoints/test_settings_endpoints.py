@@ -64,7 +64,7 @@ class TestUpdateUserEndpoint:
             message='Invalid email'
         )
 
-    def test_if_updates_user_name(self, test_client):
+    def test_if_updates_user_name(self, test_client, mocker):
         user = User().create(
             test_client.db.session,
             name='Test Update Name',
@@ -72,13 +72,14 @@ class TestUpdateUserEndpoint:
             integration_id='145'
         )
         test_client.db.session.commit()
+        mocker.patch('services.external_system.update_user', return_value='success')
         response = test_client.put(
             f'/{API_ROOT}/v{API_VERSION}/settings/{user.id}',
             json=dict(name='Test Updated to New Name')
         )
         assert loads(response.get_data())['name'] == 'Test Updated to New Name'
 
-    def test_if_updates_user_email(self, test_client):
+    def test_if_updates_user_email(self, test_client, mocker):
         user = User().create(
             test_client.db.session,
             name='Test Name',
@@ -86,8 +87,27 @@ class TestUpdateUserEndpoint:
             integration_id='145'
         )
         test_client.db.session.commit()
+        mocker.patch('services.external_system.update_user', return_value='success')
         response = test_client.put(
             f'/{API_ROOT}/v{API_VERSION}/settings/{user.id}',
             json=dict(email='test_new@email.com')
         )
         assert loads(response.get_data())['email'] == 'test_new@email.com'
+
+
+    def test_if_receives_error_after_failure_from_external_system(self, test_client, mocker):
+        user = User().create(
+            test_client.db.session,
+            name='Test Name',
+            email='test_update_fail@email.com',
+            integration_id='500'
+        )
+        test_client.db.session.commit()
+        mocker.patch('services.external_system.update_user', return_value='fail')
+        response = test_client.put(
+            f'/{API_ROOT}/v{API_VERSION}/settings/{user.id}',
+            json=dict(name='Test Fail')
+        )
+        assert loads(response.get_data()) == dict(
+            message='Error received from external system'
+        )
