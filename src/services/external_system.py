@@ -5,7 +5,7 @@ from loguru import logger
 
 class ExternalSystemException(Exception):
 
-    def __init__(self, message):            
+    def __init__(self, message):
         super().__init__(message)
         logger.error(message)
 

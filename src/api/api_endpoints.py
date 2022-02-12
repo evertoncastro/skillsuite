@@ -2,8 +2,11 @@ from app import db
 from models import User
 from util import is_valid_email
 from flask_restplus import Api
-from flask_restplus import Namespace, Resource, fields, abort
-from werkzeug.exceptions import HTTPException
+from flask_restplus import (
+    Namespace,
+    Resource,
+    fields
+)
 from werkzeug.exceptions import BadRequest
 from werkzeug.exceptions import NotFound
 from werkzeug.exceptions import InternalServerError
@@ -20,7 +23,10 @@ user_response = namespace.model('Get User Response', {
     'id': fields.Integer(required=True, description='user identifier'),
     'name': fields.String(required=True, description='user name'),
     'email': fields.String(required=True, description='user email'),
-    'integration_id': fields.String(required=True, description='user exterenal integration id')
+    'integration_id': fields.String(
+        required=True,
+        description='user exterenal integration id'
+    )
 })
 
 
@@ -28,8 +34,6 @@ update_user_request = namespace.model('Update user request', {
     'name': fields.String(required=False, description='user name'),
     'email': fields.String(required=False, description='user email')
 })
-
-
 
 headers = namespace.parser()
 
@@ -63,7 +67,7 @@ class UserSettings(Resource):
             # IDEA: The validation could be attatched to the fields
             data = namespace.payload
             if data.get('email') and not is_valid_email(data.get('email')):
-                raise BadRequest(f'Invalid email')
+                raise BadRequest('Invalid email')
             user = User().update(session, id, **data)
             if not user:
                 raise NotFound('Not found user')

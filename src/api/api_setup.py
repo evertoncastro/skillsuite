@@ -22,5 +22,7 @@ def api_loader(app: Flask) -> None:
     :param app: Flask App
     :return: Void
     """
-    app.register_blueprint(api.blueprint, url_prefix=f'/{API_ROOT}/v{API_VERSION}')
+    app.register_blueprint(
+        api.blueprint, url_prefix=f'/{API_ROOT}/v{API_VERSION}'
+    )
     return None
