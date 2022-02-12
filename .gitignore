@@ -132,3 +132,5 @@ dmypy.json
 development_migrations
 
 src/*.db
+
+.vscode

@@ -28,3 +28,21 @@ class TestUserModel:
         test_client.db.session.commit()
         test_user = User().fetch(test_client.db.session, new_user.id)
         assert test_user.email == 'testuser2@email.com'
+
+    def test_if_upated_user_with_success(self, test_client):
+        user = User().create(
+            test_client.db.session,
+            name='Test User',
+            email='testupdateuser@email.com',
+            integration_id='123'
+        )
+        test_client.db.session.commit()
+        User().update(
+            test_client.db.session,
+            user.id,
+            email='newemail@email.com',
+        )
+        test_client.db.session.commit()
+        
+        assert_user = User().fetch(test_client.db.session, user.id)
+        assert assert_user.email == 'newemail@email.com'

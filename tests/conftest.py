@@ -36,3 +36,5 @@ def test_client():
     for table in reversed(test_db.metadata.sorted_tables):
         test_db.session.execute(table.delete())
         test_db.session.commit()
+    test_db.session.close()
+
