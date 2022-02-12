@@ -10,13 +10,13 @@ class TestGetUserEndpoint:
 
     def test_if_returns_404_when_id_does_not_exist_in_database(self, test_client):
         response = test_client.get(
-            f'/{API_ROOT}/v{API_VERSION}/settings/999999'
+            f'/{API_ROOT}/v{API_VERSION}/settings/user/999999'
         )
         assert response.status_code == 404
 
     def test_if_returns_not_found_user_when_id_does_not_exist_in_database(self, test_client):
         response = test_client.get(
-            f'/{API_ROOT}/v{API_VERSION}/settings/999999'
+            f'/{API_ROOT}/v{API_VERSION}/settings/user/999999'
         )
         assert 'Not found user' in str(response.get_data())
 
@@ -29,7 +29,7 @@ class TestGetUserEndpoint:
         )
         test_client.db.session.flush()
         response = test_client.get(
-            f'/{API_ROOT}/v{API_VERSION}/settings/{new_user.id}'
+            f'/{API_ROOT}/v{API_VERSION}/settings/user/{new_user.id}'
         )
         assert loads(response.get_data()) == dict(
             id=new_user.id,
@@ -43,21 +43,21 @@ class TestUpdateUserEndpoint:
 
     def test_if_returns_404_when_user_id_does_not_exist_in_database(self, test_client):
         response = test_client.put(
-            f'/{API_ROOT}/v{API_VERSION}/settings/999999',
+            f'/{API_ROOT}/v{API_VERSION}/settings/user/999999',
             json=dict(email='newemail@gmail.com')
         )
         assert response.status_code == 404
 
     def test_if_returns_not_found_user_when_user_id_does_not_exist_in_database(self, test_client):
         response = test_client.put(
-            f'/{API_ROOT}/v{API_VERSION}/settings/999999',
+            f'/{API_ROOT}/v{API_VERSION}/settings/user/999999',
             json=dict(email='newemail@gmail.com')
         )
         assert 'Not found user' in str(response.get_data())
 
     def test_if_receives_bad_request_for_invalid_email(self, test_client):
         response = test_client.put(
-            f'/{API_ROOT}/v{API_VERSION}/settings/999',
+            f'/{API_ROOT}/v{API_VERSION}/settings/user/999',
             json=dict(email='invalid_email')
         )
         assert loads(response.get_data()) == dict(
@@ -74,7 +74,7 @@ class TestUpdateUserEndpoint:
         test_client.db.session.commit()
         mocker.patch('services.external_system.update_user', return_value='success')
         response = test_client.put(
-            f'/{API_ROOT}/v{API_VERSION}/settings/{user.id}',
+            f'/{API_ROOT}/v{API_VERSION}/settings/user/{user.id}',
             json=dict(name='Test Updated to New Name')
         )
         assert loads(response.get_data())['name'] == 'Test Updated to New Name'
@@ -89,7 +89,7 @@ class TestUpdateUserEndpoint:
         test_client.db.session.commit()
         mocker.patch('services.external_system.update_user', return_value='success')
         response = test_client.put(
-            f'/{API_ROOT}/v{API_VERSION}/settings/{user.id}',
+            f'/{API_ROOT}/v{API_VERSION}/settings/user/{user.id}',
             json=dict(email='test_new@email.com')
         )
         assert loads(response.get_data())['email'] == 'test_new@email.com'
@@ -105,7 +105,7 @@ class TestUpdateUserEndpoint:
         test_client.db.session.commit()
         mocker.patch('services.external_system.update_user', return_value='fail')
         response = test_client.put(
-            f'/{API_ROOT}/v{API_VERSION}/settings/{user.id}',
+            f'/{API_ROOT}/v{API_VERSION}/settings/user/{user.id}',
             json=dict(name='Test Fail')
         )
         assert loads(response.get_data()) == dict(

@@ -34,7 +34,7 @@ update_user_request = namespace.model('Update user request', {
 headers = namespace.parser()
 
 
-@namespace.route('/<int:id>', doc={"description": 'Settings'})
+@namespace.route('/user/<int:id>', doc={"description": 'Settings'})
 @namespace.param('id', 'user identifier')
 @namespace.expect(headers)
 class UserSettings(Resource):
