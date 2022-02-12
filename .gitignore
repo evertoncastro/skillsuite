@@ -131,4 +131,4 @@ dmypy.json
 
 development_migrations
 
-src/app.db
+src/*.db

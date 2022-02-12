@@ -10,7 +10,7 @@ source env/bin/activate
 
 #### Install packages
 ```
-pip install -r app/requirements.txt
+pip install -r src/requirements.txt
 ```
 
 ### Variables setup
