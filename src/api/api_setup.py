@@ -1,15 +1,19 @@
+from config import (
+    API_VERSION,
+    API_ROOT
+)
 from flask import Flask, Blueprint
 from flask_restplus import Api as ApiRestPlus
-# from api.endpoints import _
+from api.api_endpoints import register_endpoints
 
 
 api = ApiRestPlus(
     Blueprint('API - Skill Suite', __name__),
-    title='API to manage Skill Suite system',
-    version='1.0'
+    title='API to manage Skill Suite application',
+    version=API_VERSION
 )
 
-#_.bind_with_api(api)
+register_endpoints(api)
 
 
 def api_loader(app: Flask) -> None:
@@ -18,5 +22,5 @@ def api_loader(app: Flask) -> None:
     :param app: Flask App
     :return: Void
     """
-    app.register_blueprint(api.blueprint, url_prefix='/skillsuite/v1.0')
+    app.register_blueprint(api.blueprint, url_prefix=f'/{API_ROOT}/v{API_VERSION}')
     return None

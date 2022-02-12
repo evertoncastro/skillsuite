@@ -28,7 +28,7 @@ def setup_database(_app: object) -> SQLAlchemy:
 def setup_database_migration(_app: object, _db: SQLAlchemy) -> Migrate:
     """
     Setup the database automatic migration
-    :param app: Aplicativo Flask
+    :param app: Flask App
     :param db: Database Engine
     :return: Migration object
     """
