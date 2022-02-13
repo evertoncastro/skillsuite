@@ -72,7 +72,6 @@ class UserSettings(Resource):
             if not user:
                 raise NotFound('Not found user')
             call_external_system(user)
-            # session.commit()
             return user
         except ExternalSystemException as e:
             session.rollback()
