@@ -29,7 +29,7 @@ flask db upgrade --directory=development_migrations
 
 ### Renning tests
 ```
-python tests/runner.py
+make test
 ```
 
 ### Start app
